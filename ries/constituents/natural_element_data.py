@@ -118,6 +118,9 @@ class NISTElementDataReader:
                     amu = self.read_nist_element_property_with_uncertainty(
                         line, self.amu_prefix
                     )
+                # Some special cases can be found in the NIST natural elements data base.
+                # For example, 14C is listed, but no value for the abundance is given.
+                # For this reason, the default value for the abundance is zero.
                 elif self.abundance_prefix in line and current_Z == Z:
                     abundance = self.read_nist_element_property_with_uncertainty(
                         line, self.abundance_prefix, default=0.0

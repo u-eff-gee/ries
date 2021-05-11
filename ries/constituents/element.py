@@ -116,6 +116,23 @@ X = nist_element_data_reader.read_nist_element_symbols()
 
 natural_elements = {}
 for Z in range(1, 119):
+    # The default value for the abundance is zero in `natural_element_data.py`.
+    # It will be used if the abundance entry for an isotope shows either nothing or a number
+    # that is not in the format "VALUE(UNCERTAINTY)".
+    # This is the case for elements that have only a single (beryllium) or no (technetium) stable
+    # isotope.
+    # In the former case, the abundance of the single isotope would be "1" without an error, and
+    # in the latter case, the entry is usually empty.
+    # Since the default value is 0, this leads to some problems where the element data are used.
+    # In particular, in `xrmac.py`, the XRMAC per atom is calculated by dividing by the atomic
+    # mass, which, in turn, is an abundance-weighted average of all the isotope masses.
+    # The following code checks for elements whose abundances are all zero and sets them to a
+    # uniform distribution by default.
+    # This is exactly correct in the case of monoisotopic elements and the best guess I could come
+    # up with for unstable elements.
     abundances, isotopes = nist_element_data_reader.read_nist_element_data(Z)
+    if sum([abundances[AX] for AX in abundances]) == 0.0:
+        for AX in abundances:
+            abundances[AX] = 1.0 / len(abundances)
     density = geant4_density_data_reader.read_density_data(X[Z])
     natural_elements[X[Z]] = Element(Z, X[Z], isotopes, abundances, density)

@@ -14,6 +14,7 @@
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
 import pytest
+import warnings
 
 import numpy as np
 
@@ -33,8 +34,9 @@ def test_debye_model():
         rtol=1e-3,
     )
 
-    with pytest.raises(ZeroDivisionError):
-        effective_temperature_debye_approximation(0.0, T_D)
+    with pytest.warns(RuntimeWarning):
+        with pytest.raises(ZeroDivisionError):
+            effective_temperature_debye_approximation(0.0, T_D)
 
     # Test the high-temperature limit.
     # In this limit, the effective temperature is equal to the thermodynamic temperature,
