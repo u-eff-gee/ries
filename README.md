@@ -10,12 +10,12 @@ If you fully agree to this statement, you have a rough idea of the scaling laws 
 The `ries` library is all about these finite-temperature, thick-target, isolated-resonance, multiple-scattering ... effects that call for a reconsideration of statements like the one above.
 When utilized in a clever way, second-order effects can even be the basis for more efficient experiments.
 
-In fact, now is the right time to get involved, because currently existing [1,2] and planned [3] intense, polarized quasi-monoenergetic photon sources ('gamma-ray lasers') in the mega-electronvolt energy range have led to a 'renaissance' of photonuclear reaction studies.
+In fact, now is the right time to get involved, because currently existing [1] and planned [2] intense, polarized quasi-monoenergetic photon sources ('gamma-ray lasers') in the mega-electronvolt energy range have led to a 'renaissance' of photonuclear reaction studies.
 
 ## Description
 
 The object-orientated and modular library `ries` allows users to simulate the passage of a photon beam through a sample in a nuclear physics experiment.
-It aims to bridge the gap between pen-and-paper calculations and full-scale Monte Carlo particle simulations like Geant4 [4] or MCNP [5]:
+It aims to bridge the gap between pen-and-paper calculations and full-scale Monte Carlo particle simulations like Geant4 [3] or MCNP [4]:
 Precise enough for serious work, and fast enough to act as the cost function of an optimization problem or the data model in a Bayesian analysis.
 
 `ries` uses `ℏc = 197.3269804 MeV fm` for the product of the reduced Planck constant and the speed of light.
@@ -80,10 +80,8 @@ Copyright (C) 2020, 2021 Udo Friman-Gayer (ufg@email.unc.edu)
 
 [1] High-Intensity Gamma-Ray Source (HIγS) at TUNL [https://tunl.duke.edu/research/our-facilities](https://tunl.duke.edu/research/our-facilities), accessed on 12/02/2020
 
-[2] NewSUBARU at University of Hyogo [https://www.lasti.u-hyogo.ac.jp/NS-en/newsubaru/](https://www.lasti.u-hyogo.ac.jp/NS-en/newsubaru/), accessed on 12/02/2020
+[2] Variable Energy Gamma (VEGA) System at ELI-NP [https://www.eli-np.ro/rd2.php](https://www.eli-np.ro/rd2.php), accessed on 12/02/2020
 
-[3] Variable Energy Gamma (VEGA) System at ELI-NP [https://www.eli-np.ro/rd2.php](https://www.eli-np.ro/rd2.php), accessed on 12/02/2020
+[3] [https://geant4.web.cern.ch/](https://geant4.web.cern.ch/), accessed on 12/02/2020
 
-[4] [https://geant4.web.cern.ch/](https://geant4.web.cern.ch/), accessed on 12/02/2020
-
-[5] [https://mcnp.lanl.gov/](https://mcnp.lanl.gov/), accessed on 12/02/2020
+[4] [https://mcnp.lanl.gov/](https://mcnp.lanl.gov/), accessed on 12/02/2020
