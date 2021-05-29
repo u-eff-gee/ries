@@ -31,7 +31,7 @@ Temperatures are assumed to be given in Kelvin.
 * [scipy](https://www.scipy.org/)
 
 The [tox](https://tox.readthedocs.io/) tool is used to run self tests, build the documentation, and check whether the code is in standard format.
-This requires the following packages:
+This requires the following (optional) packages:
 
 * [black](https://black.readthedocs.io)
 * [matplotlib](https://matplotlib.org/)
@@ -39,7 +39,9 @@ This requires the following packages:
 * [pytest-cov](https://pytest-cov.readthedocs.io/)
 * [sphinx](https://www.sphinx-doc.org/)
 * [sphinxcontrib-bibtex](https://sphinxcontrib-bibtex.readthedocs.io/)
-* [tox](https://tox.readthedocs.io/) 
+* [tox](https://tox.readthedocs.io/)
+
+`ries` is shipped with several [jupyter](https://jupyter.org/) notebooks that demonstrate the usage, i.e. `jupyter` is another optional component.
 
 ## Installation
 
@@ -65,6 +67,14 @@ tox
 in the same directory.
 By default, the documentation will be generated in html format.
 It can be found in `$RIES_DIR/build` and opened in a web browser.
+
+## Getting Started
+
+The usage of `ries` is demonstrated in `jupyter` notebooks in `$RIES_DIR/notebooks`:
+
+* `self_absorption_correction.ipynb` is the most simple one. It demonstrates the self-absorption effect in thick-target experiments.
+* `layer_target.ipynb` is similar to `self_absorption_correction.ipynb`, but generalized to a multi-layer target.
+* `6Li.ipynb` shows a realistic data analysis with `ries` which includes the propagation of uncertainty.
 
 ## License
 
