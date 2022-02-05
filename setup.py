@@ -17,10 +17,10 @@ import setuptools
 
 setuptools.setup(
     name="ries",
-    version="1.0.0",
+    version="1.0.1",
     description="resonances integrated over energy and space",
     author="Udo Friman-Gayer",
-    author_email="ufg@email.unc.edu",
+    author_email="udo.friman-gayer@duke.edu",
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
