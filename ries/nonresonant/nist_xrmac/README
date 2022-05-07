@@ -1,0 +1,22 @@
+# This file is part of ries.
+
+# ries is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# ries is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with ries.  If not, see <https://www.gnu.org/licenses/>.
+
+This directory is expected to contain tabulated x-ray mass attenuation coefficients for chemical elements from:
+
+[1] J. Hubbell and S. M. Seltzer, 'Tables of X-Ray Mass Attenuation Coefficients and Mass Energy-Absorption Coefficients from 1 keV to 20 MeV for Elements Z = 1 to 92 and 48 Additional Substances of Dosimetric Interest', NIST Standard Reference Database 126 (1996) https://dx.doi.org/10.18434/T4D01F (accessed on 05/07/2022)
+
+It is assumed that there are separate files for each chemical element, which are called 'ZZ.txt'.
+'ZZ' is the zero-padded proton number of the element, i.e. the file for hydrogen would be called '01.txt'.
+The format of the files is the 'ASCII format' of the table in Ref. [1].
