@@ -64,6 +64,7 @@ from scipy.constants import physical_constants
 
 from ries.constituents.element import natural_elements, X
 from ries.nonresonant.nonresonant import Nonresonant
+from ries.nonresonant.klein_nishina import KleinNishina
 
 
 class XRMAC(Nonresonant):
@@ -125,7 +126,16 @@ class XRMAC(Nonresonant):
         self.xrmac_conversion = xrmac_conversion
         if isinstance(data, str):
             data = self.read_nist_xrmac(data)
-        self.data = data
+        self.data = []
+        for d in data:
+            self.data.append(
+                [
+                    self.energy_conversion(d[0]),
+                    self.xrmac_conversion(d[1]),
+                    self.xrmac_conversion(d[2]),
+                ]
+            )
+        self.data = np.array(self.data)
         self.interpolation_log_log = self.interpolate_log_log(self.data)
 
     def __call__(self, E):
@@ -217,9 +227,9 @@ class XRMAC(Nonresonant):
                 line = line[skip:-2].split(sep="  ")
                 data.append(
                     [
-                        self.energy_conversion(float(line[0])),
-                        self.xrmac_conversion(float(line[1])),
-                        self.xrmac_conversion(float(line[2])),
+                        float(line[0]),
+                        float(line[1]),
+                        float(line[2]),
                     ]
                 )
         return np.array(data)
@@ -227,20 +237,37 @@ class XRMAC(Nonresonant):
 
 # Read the XRMAC data of Hubbell and Seltzer supplied with the `ries` repository and create the
 # `xrmac_cm2_per_g` and `xrmac_fm2_per_atom` dictionaries.
+# Alternatively, use the analytical expression of the Compton-scattering cross section to 
+# substitute nonexistent XRMAC datasets.
 xrmac_data_dir = Path(__file__).parent.absolute() / "../nonresonant/nist_xrmac/"
 
 xrmac_cm2_per_g = {}
 xrmac_fm2_per_atom = {}
 cm_to_fm = 1e13
 kg_to_g = 1e3
+default_data = np.zeros((100, 3))
+default_data[:,0] = np.logspace(-3, np.log10(20.), len(default_data)) # Energies in MeV. Same range as the NIST datasets.
 
 for Z in range(1, 93):
-    xrmac_cm2_per_g[X[Z]] = XRMAC(str(xrmac_data_dir / "{:02d}.txt".format(Z)))
-    xrmac_fm2_per_atom[X[Z]] = XRMAC(
-        str(xrmac_data_dir / "{:02d}.txt".format(Z)),
-        xrmac_conversion=lambda xrmac: xrmac
-        * cm_to_fm ** 2
-        * natural_elements[X[Z]].amu
-        * physical_constants["atomic mass constant"][0]
-        * kg_to_g,
-    )
+    if (xrmac_data_file := xrmac_data_dir / "{:02d}.txt".format(Z)).is_file():
+        xrmac_cm2_per_g[X[Z]] = XRMAC(xrmac_data_file)
+        xrmac_fm2_per_atom[X[Z]] = XRMAC(
+            str(xrmac_data_dir / "{:02d}.txt".format(Z)),
+            xrmac_conversion=lambda xrmac: xrmac
+            * cm_to_fm ** 2
+            * natural_elements[X[Z]].amu
+            * physical_constants["atomic mass constant"][0]
+            * kg_to_g,
+        )
+    else:
+        default_data[:,1] = KleinNishina(Z)(default_data[:,0])
+        xrmac_fm2_per_atom[X[Z]] = XRMAC(
+            default_data
+        )
+        xrmac_cm2_per_g[X[Z]] = XRMAC(
+            default_data,
+            xrmac_conversion=lambda xrmac: xrmac / (cm_to_fm ** 2
+            * natural_elements[X[Z]].amu
+            * physical_constants["atomic mass constant"][0]
+            * kg_to_g)
+        )
