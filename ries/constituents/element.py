@@ -46,10 +46,13 @@ from pathlib import Path
 
 import numpy as np
 
+from ries.constituents.geant4_densities.densities import densities
 from ries.constituents.natural_element_data import (
     Geant4DensityDataReader,
-    NISTElementDataReader,
+    AME2020MassDataReader
 )
+from ries.constituents.isotope import Isotope
+from ries.constituents.iupac_isotopic_compositions.isotopic_compositions import isotopic_compositions
 
 
 class Element:
@@ -103,36 +106,28 @@ class Element:
         """
         return np.sum([isotopes[iso].amu * abundances[iso] for iso in isotopes])
 
+def create_natural_element_dictionary():
+    geant4_density_data_reader = Geant4DensityDataReader(
+        Path(__file__).parent.absolute() / "geant4_densities/element_densities.txt"
+    )
+    ame2020_mass_data_reader = AME2020MassDataReader(
+        Path(__file__).parent.absolute() / "ame2020_masses/mass_1.mas20"
+    )
+    ame_masses = ame2020_mass_data_reader.read_mass_data()
+    X_dict, Z_dict = ame2020_mass_data_reader.read_element_symbols()
 
-# Read the NIST natural elements data supplied with the `ries` repository and create the
-# `natural_elements` dictionary.
-geant4_density_data_reader = Geant4DensityDataReader(
-    Path(__file__).parent.absolute() / "geant4_densities/element_densities.txt"
-)
-nist_element_data_reader = NISTElementDataReader(
-    Path(__file__).parent.absolute() / "nist_elements/elements.txt"
-)
-X = nist_element_data_reader.read_nist_element_symbols()
+    natural_elements = {}
+    for Z in X_dict:
+        abundances = {}
+        isotopes = {}
+        if X_dict[Z] in isotopic_compositions:
+            for isotope in isotopic_compositions[X_dict[Z]]:
+                isotopes[isotope] = Isotope(
+                        Z,
+                        ame_masses[Z][isotope]
+                    )
+                abundances[isotope] = isotopic_compositions[X_dict[Z]][isotope]
+            natural_elements[X_dict[Z]] = Element(Z, X_dict[Z], isotopes, abundances, densities[X_dict[Z]])
+    return natural_elements
 
-natural_elements = {}
-for Z in range(1, 119):
-    # The default value for the abundance is zero in `natural_element_data.py`.
-    # It will be used if the abundance entry for an isotope shows either nothing or a number
-    # that is not in the format "VALUE(UNCERTAINTY)".
-    # This is the case for elements that have only a single (beryllium) or no (technetium) stable
-    # isotope.
-    # In the former case, the abundance of the single isotope would be "1" without an error, and
-    # in the latter case, the entry is usually empty.
-    # Since the default value is 0, this leads to some problems where the element data are used.
-    # In particular, in `xrmac.py`, the XRMAC per atom is calculated by dividing by the atomic
-    # mass, which, in turn, is an abundance-weighted average of all the isotope masses.
-    # The following code checks for elements whose abundances are all zero and sets them to a
-    # uniform distribution by default.
-    # This is exactly correct in the case of monoisotopic elements and the best guess I could come
-    # up with for unstable elements.
-    abundances, isotopes = nist_element_data_reader.read_nist_element_data(Z)
-    if sum([abundances[AX] for AX in abundances]) == 0.0:
-        for AX in abundances:
-            abundances[AX] = 1.0 / len(abundances)
-    density = geant4_density_data_reader.read_density_data(X[Z])
-    natural_elements[X[Z]] = Element(Z, X[Z], isotopes, abundances, density)
+natural_elements = create_natural_element_dictionary()

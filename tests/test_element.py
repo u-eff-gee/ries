@@ -13,27 +13,26 @@
 # You should have received a copy of the GNU General Public License
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
-from ries.constituents.element import natural_elements
+from pathlib import Path
 
+from ries.constituents.element import natural_elements
+from ries.constituents.iupac_isotopic_compositions.isotopic_compositions import isotopic_compositions
+from ries.constituents.natural_element_data import AME2020MassDataReader
 
 def test_element():
+    ame2020_reader = AME2020MassDataReader(
+        Path(__file__).parent.absolute()
+        / "../ries/constituents/ame2020_masses/mass_1.mas20"
+    )
+    ame_masses = ame2020_reader.read_mass_data()
+
     assert natural_elements["Pb"].Z == 82
     assert len(natural_elements["Pb"].isotopes) == 4
-    assert natural_elements["Pb"].amu == (207.216908063)
+    assert natural_elements["Pb"].amu == (
+        isotopic_compositions["Pb"][204]*ame_masses[82][204]
+        +isotopic_compositions["Pb"][206]*ame_masses[82][206]
+        +isotopic_compositions["Pb"][207]*ame_masses[82][207]
+        +isotopic_compositions["Pb"][208]*ame_masses[82][208]
+    )
+    assert natural_elements["Pb"].abundances[204] == isotopic_compositions["Pb"][204]
     assert natural_elements["Pb"].density == 11.35
-
-    # Test some special cases.
-
-    # In the NIST data file, the carbon isotopes 12C, 13C, and 14C are listed.
-    # No abundance is given for 14C, since it is radioactive.
-    # Test that the 14C abundance is initialized to zero.
-    assert natural_elements["C"].amu == 12.010735896735248
-
-    # Beryllium has only a single stable isotope, 9Be.
-    # Its abundance is given as "1" without an error.
-    # Check that this is parsed correctly.
-    assert natural_elements["Be"].abundances["9Be"] == 1.0
-
-    # Technetium has no stable isotopes, but three are listed in the NIST data file.
-    # By default, their abundances should be initialized to 1/3.
-    assert natural_elements["Tc"].abundances["97Tc"] == 1.0 / 3.0
