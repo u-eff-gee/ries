@@ -115,7 +115,7 @@ def test_resonance():
         np.pi
         * np.pi
         * physical_constants["reduced Planck constant times c in MeV fm"][0] ** 2
-        / (5.02030 ** 2)
+        / (5.02030**2)
         * (3.0 + 1.0)
         / (3.0 + 1.0)
         * 0.856

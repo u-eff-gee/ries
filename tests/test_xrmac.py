@@ -14,13 +14,16 @@
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
+import pytest
 from scipy.constants import physical_constants
 
 from ries.constituents.element import natural_elements
-from ries.nonresonant.xrmac import xrmac_cm2_per_g, xrmac_fm2_per_atom
+from ries.nonresonant.xrmac import load_xrmac_data, xrmac_cm2_per_g, xrmac_fm2_per_atom
 
 
 def test_xrmac():
+    with pytest.warns(UserWarning):
+        load_xrmac_data()
     xrmac_Pb_1MeV = 7.1e-2  # Rounded NIST value
     xrmac_test = (
         xrmac_Pb_1MeV

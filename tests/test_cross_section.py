@@ -23,7 +23,7 @@ from ries.cross_section import (
     ConstantCrossSection,
 )
 from ries.constituents.element import natural_elements
-from ries.nonresonant.xrmac import cm_to_fm, kg_to_g, xrmac_fm2_per_atom
+from ries.nonresonant.xrmac import load_xrmac_data, xrmac_fm2_per_atom
 from ries.resonance.voigt import Voigt
 from ries.resonance.debye_model import (
     effective_temperature_debye_approximation,
@@ -46,6 +46,10 @@ class TestCrossSection:
 
     def test_algebra(self):
 
+        cm_to_fm = 1e13
+        kg_to_g = 1e3
+        with pytest.warns(UserWarning):
+            load_xrmac_data()
         # Create array of all 11B ground-state transitions.
         ground_state_resonances = [
             Voigt(
@@ -126,16 +130,19 @@ class TestCrossSection:
         )
 
         photoabsorption_cross_section_value = (
-            5.890e-2
-            * cm_to_fm ** 2
+            5.9e-2  # Rounded NIST value
+            * cm_to_fm**2
             * natural_elements["B"].amu
             * physical_constants["atomic mass constant"][0]
             * kg_to_g
         )
+        # Use a generous tolerance to be able to cover the Compton-scattering default values
+        # and the more realistic NIST data.
+        # See also test/test_xrmac.py.
         assert np.isclose(
             photoabsorption_cross_section(1.0),
             photoabsorption_cross_section_value,
-            rtol=1e-6,
+            rtol=1e-1,
         )
 
     def test_grid(self):

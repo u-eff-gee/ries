@@ -25,12 +25,14 @@ from ries.resonance.debye_model import (
 )
 from ries.resonance.voigt import Voigt
 from ries.nonresonant.klein_nishina import KleinNishina
-from ries.nonresonant.xrmac import xrmac_fm2_per_atom
+from ries.nonresonant.xrmac import load_xrmac_data, xrmac_fm2_per_atom
 
 from .boron import B11, natural_boron
 
 
 def test_cross_section_plot():
+    with pytest.warns(UserWarning):
+        load_xrmac_data()
     cross_section_nonresonant = xrmac_fm2_per_atom["B"]
     cross_section_resonant = sum(
         [

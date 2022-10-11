@@ -57,6 +57,7 @@ For example, to obtain the XRMAC for lead at an energy of 1 MeV in :math:`\mathr
 """
 
 from pathlib import Path
+from warnings import warn
 
 import numpy as np
 from scipy.interpolate import interp1d
@@ -237,37 +238,60 @@ class XRMAC(Nonresonant):
 
 # Read the XRMAC data of Hubbell and Seltzer supplied with the `ries` repository and create the
 # `xrmac_cm2_per_g` and `xrmac_fm2_per_atom` dictionaries.
-# Alternatively, use the analytical expression of the Compton-scattering cross section to 
+# Alternatively, use the analytical expression of the Compton-scattering cross section to
 # substitute nonexistent XRMAC datasets.
 xrmac_data_dir = Path(__file__).parent.absolute() / "../nonresonant/nist_xrmac/"
 
 xrmac_cm2_per_g = {}
 xrmac_fm2_per_atom = {}
-cm_to_fm = 1e13
-kg_to_g = 1e3
-default_data = np.zeros((100, 3))
-default_data[:,0] = np.logspace(-3, np.log10(20.), len(default_data)) # Energies in MeV. Same range as the NIST datasets.
 
-for Z in range(1, 93):
-    if (xrmac_data_file := xrmac_data_dir / "{:02d}.txt".format(Z)).is_file():
-        xrmac_cm2_per_g[X[Z]] = XRMAC(xrmac_data_file)
-        xrmac_fm2_per_atom[X[Z]] = XRMAC(
-            str(xrmac_data_dir / "{:02d}.txt".format(Z)),
-            xrmac_conversion=lambda xrmac: xrmac
-            * cm_to_fm ** 2
-            * natural_elements[X[Z]].amu
-            * physical_constants["atomic mass constant"][0]
-            * kg_to_g,
+def load_xrmac_data():
+    cm_to_fm = 1e13
+    kg_to_g = 1e3
+    default_data = np.zeros((100, 3))
+    default_data[:, 0] = np.logspace(
+        -3, np.log10(20.0), len(default_data)
+    )  # Energies in MeV. Same range as the NIST datasets.
+    missing_datasets = []
+
+    for Z in range(1, 93):
+        if (xrmac_data_file := xrmac_data_dir / "{:02d}.txt".format(Z)).is_file():
+            xrmac_cm2_per_g[X[Z]] = XRMAC(xrmac_data_file)
+            xrmac_fm2_per_atom[X[Z]] = XRMAC(
+                str(xrmac_data_dir / "{:02d}.txt".format(Z)),
+                xrmac_conversion=lambda xrmac: xrmac
+                * cm_to_fm**2
+                * natural_elements[X[Z]].amu
+                * physical_constants["atomic mass constant"][0]
+                * kg_to_g,
+            )
+        else:
+            default_data[:, 1] = KleinNishina(Z)(default_data[:, 0])
+            xrmac_fm2_per_atom[X[Z]] = XRMAC(default_data)
+            xrmac_cm2_per_g[X[Z]] = XRMAC(
+                default_data,
+                xrmac_conversion=lambda xrmac: xrmac
+                / (
+                    cm_to_fm**2
+                    * natural_elements[X[Z]].amu
+                    * physical_constants["atomic mass constant"][0]
+                    * kg_to_g
+                ),
+            )
+            missing_datasets.append(X[Z])
+
+    if len(missing_datasets) > 0:
+        warning_message = (
+            "X-ray mass attenuation coefficient (XRMAC) data for the following elements "
+            "were not found in '{}' and replaced by an analytical expression for the Compton-scattering "
+            "cross section:\n".format(xrmac_data_dir)
         )
-    else:
-        default_data[:,1] = KleinNishina(Z)(default_data[:,0])
-        xrmac_fm2_per_atom[X[Z]] = XRMAC(
-            default_data
+        for n_element, element in enumerate(missing_datasets):
+            warning_message += element
+            if n_element < len(missing_datasets) - 1:
+                warning_message += ", "
+        warning_message += (
+            "\nPlease note that the Compton-scattering cross section is only a rough "
+            "approximation of the true XRMAC."
         )
-        xrmac_cm2_per_g[X[Z]] = XRMAC(
-            default_data,
-            xrmac_conversion=lambda xrmac: xrmac / (cm_to_fm ** 2
-            * natural_elements[X[Z]].amu
-            * physical_constants["atomic mass constant"][0]
-            * kg_to_g)
-        )
+        warn(warning_message)
