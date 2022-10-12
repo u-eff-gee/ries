@@ -13,49 +13,54 @@
 # You should have received a copy of the GNU General Public License
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
-r"""
-Module for storing isotope data.
-
-An isotope :math:`^A\mathrm{X}` with a mass number :math:`\mathrm{A}` and
-an element symbol :math:`\mathrm{X}` has the following properties:
-
-* an isotopic mass :math:`m \left( ^A\mathrm{X} \right)`
-* a ground state :math:`J_0^{\pi_0}`
-* a set of excited states :math:`\left\{ J_i^{\pi_i}\right\}` (:math:`i > 0`)
-
-For a detailed example of how to create a user-defined element, see `tests/boron.py`.
-"""
-
 
 class Isotope:
     """Class representing an isotope
 
-    Attributes:
-
-    - `AX`, str, mass number and element symbol.
-      For example, the isotope of lead with a neutron number of 126
-      would be '208Pb'.
-    - `amu`, float, isotopic mass in atomic mass units (AMU).
-    - `ground_state`, `State` object, ground state of the isotope.
-    - `excited_states`, array of `State` objects, list of excited states
-      of the isotope.
+    Attributes
+    ----------
+    Z: int
+        Proton number
+    A: int
+        Mass number
+    amu: float
+        Mass in atomic mass units (u)
+    abundance: float
+        Isotopic abundance as a fraction (default: 1.0)
+    X: str
+        Element symbol (default: None, i.e. initialize from Z)
+    ground_state: State object
+        Ground state of the isotope (default: None)
+    excited_states: dict str: State
+        Dictionary of the excited states of the isotope with arbitrary strings as keys (default: None)
     """
 
-    def __init__(self, AX, amu, ground_state=None, excited_states=None):
+    def __init__(
+        self, Z, A, amu, abundance=0.0, X=None, ground_state=None, excited_states=None
+    ):
         """Initialization
 
-        Parameters:
-
-        - `AX`, str, mass number and element symbol.
-          For example, the isotope of lead with a neutron number of 126
-          would be '208Pb'.
-        - `amu`, float, isotopic mass in atomic mass units (AMU).
-        - `ground_state`, `State` object, ground state of the isotope
-          (default: None).
-        - `excited_states`, array of `State` objects, list of excited states
-          of the isotope (default: empty list).
+        Parameters
+        ----------
+        Z: int
+            Proton number
+        A: int
+            Mass number
+        amu: float
+            Mass in atomic mass units (u)
+        abundance: float
+            Isotopic abundance as a fraction (default: 0.0)
+        X: str
+            Element symbol (default: None, i.e. initialize from Z)
+        ground_state: State object
+            Ground state of the isotope (default: None)
+        excited_states: dict str: State
+            Dictionary of the excited states of the isotope with arbitrary strings as keys (default: None)
         """
-        self.AX = AX
+        self.Z = Z
+        self.A = A
         self.amu = amu
+        self.abundance = abundance
+        self.X = X
         self.ground_state = ground_state
-        self.excited_states = excited_states or []
+        self.excited_states = excited_states
