@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from ries.constituents.natural_element_data import AME2020MassDataReader
+from ries.constituents.ame_2020_mass_data_reader import AME2020MassDataReader
 
 class TestAME2020MassDataReader:
     def test_ame2020_mass_data_reader(self):

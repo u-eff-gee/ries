@@ -17,7 +17,7 @@ import numpy as np
 import pytest
 from scipy.constants import physical_constants
 
-from ries.constituents.element import natural_elements
+from ries.constituents.element import Z_from_X, natural_elements
 from ries.nonresonant.xrmac import load_xrmac_data, xrmac_cm2_per_g, xrmac_fm2_per_atom
 
 
@@ -28,7 +28,7 @@ def test_xrmac():
     xrmac_test = (
         xrmac_Pb_1MeV
         * 1e26
-        * natural_elements["Pb"].amu
+        * natural_elements[Z_from_X["Pb"]].amu
         * physical_constants["atomic mass constant"][0]
         * 1e3
     )
@@ -36,5 +36,5 @@ def test_xrmac():
     # and the more realistic NIST data.
     # Even at 1 MeV, where Compton scattering contributes most to the attenuation by lead,
     # the Compton approximation is about 30% off.
-    assert np.isclose(xrmac_cm2_per_g["Pb"](1.0), xrmac_Pb_1MeV, rtol=3e-1)
-    assert np.isclose(xrmac_fm2_per_atom["Pb"](1.0), xrmac_test, rtol=3e-1)
+    assert np.isclose(xrmac_cm2_per_g[Z_from_X["Pb"]](1.0), xrmac_Pb_1MeV, rtol=3e-1)
+    assert np.isclose(xrmac_fm2_per_atom[Z_from_X["Pb"]](1.0), xrmac_test, rtol=3e-1)

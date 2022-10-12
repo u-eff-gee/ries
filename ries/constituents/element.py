@@ -123,7 +123,7 @@ def create_natural_element_dictionary():
                         ame_masses[Z][A]
                     )
                 abundances[A] = isotopic_compositions[Z][A]
-            natural_elements[Z] = Element(Z=Z, X=X_from_Z[Z], isotopes=isotopes, abundances=abundances, density=densities[Z])
-    return natural_elements
+            natural_elements[Z] = Element(Z=Z, X=X_from_Z[Z], isotopes=isotopes, abundances=abundances, density=densities[Z] if Z in densities else None)
+    return (X_from_Z, Z_from_X, natural_elements)
 
-natural_elements = create_natural_element_dictionary()
+X_from_Z, Z_from_X, natural_elements = create_natural_element_dictionary()

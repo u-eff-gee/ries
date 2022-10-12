@@ -1,7 +1,0 @@
-This directory is expected to contain a file called 'elements.txt' with chemical-element properties in the 'Linearized ASCII Output' format from Ref. [1, 2], which is a compilation of data from Refs. [3-5].
-
-[1] J. S. Coursey, D. J. Schwab, J. J. Tsai, and R. A. Dragoset, 'Atomic Weights and isotopic Compositions with Relative Atomic Masses', NIST Physical Measurement Laboratory (https://www.nist.gov/pml/atomic-weights-and-isotopic-compositions-relative-atomic-masses) accessed on 05/07/2022
-[2] The original file contains entries for deuterium and tritium, which prevent a simple parsing of the file. Here, tritium, which is not contained in natural hydrogen, was removed, and the 'Atomic Symbol' of deuterium was changed from 'D' to 'H'. 
-[3] J. Meija et al., 'Atomic weights of the elements 2013', Pure Appl. Chem. 88, 265-291 (2016) https://doi.org/10.1515/pac-2015-0305
-[4] M. Berglund and M. E. Wieser, 'Isotopic compositions of the elements 2009 (IUPAC Technical Report)', Pure Appl. Chem. 83, 397-410 (2011) https://doi.org/10.1351/PAC-REP-10-06-02
-[5] M. Wang et al., 'The AME2012 atomic mass evaluation', Chinese Phys. C 36, 1603-2014 (2012) https://doi.org/10.1088/1674-1137/36/12/003

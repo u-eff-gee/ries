@@ -19,6 +19,7 @@ def test_isotopic_compositions():
 
     # Count the number of quasi-monoisotopic [1] elements.
     # The result should be : 
+    #  0. n
     #  1. Be
     #  2. F 
     #  3. Na 
@@ -47,4 +48,4 @@ def test_isotopic_compositions():
     for Z in isotopic_compositions:
         if len(isotopic_compositions[Z]) == 1:
             n_monoisotopic += 1
-    assert n_monoisotopic == 21
+    assert n_monoisotopic == 22

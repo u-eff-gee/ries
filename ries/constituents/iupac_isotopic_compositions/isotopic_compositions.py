@@ -20,6 +20,7 @@ are filled with an empty list of isotopes.
 """
 
 isotopic_compositions = {
+    0: {},
     1: {
         1: 0.99984426,
         2: 0.00015574,

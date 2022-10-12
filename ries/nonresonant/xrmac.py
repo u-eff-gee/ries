@@ -63,7 +63,7 @@ import numpy as np
 from scipy.interpolate import interp1d
 from scipy.constants import physical_constants
 
-from ries.constituents.element import natural_elements, X
+from ries.constituents.element import natural_elements, X_from_Z
 from ries.nonresonant.nonresonant import Nonresonant
 from ries.nonresonant.klein_nishina import KleinNishina
 
@@ -256,29 +256,29 @@ def load_xrmac_data():
 
     for Z in range(1, 93):
         if (xrmac_data_file := xrmac_data_dir / "{:02d}.txt".format(Z)).is_file():
-            xrmac_cm2_per_g[X[Z]] = XRMAC(xrmac_data_file)
-            xrmac_fm2_per_atom[X[Z]] = XRMAC(
+            xrmac_cm2_per_g[Z] = XRMAC(xrmac_data_file)
+            xrmac_fm2_per_atom[Z] = XRMAC(
                 str(xrmac_data_dir / "{:02d}.txt".format(Z)),
                 xrmac_conversion=lambda xrmac: xrmac
                 * cm_to_fm**2
-                * natural_elements[X[Z]].amu
+                * natural_elements[Z].amu
                 * physical_constants["atomic mass constant"][0]
                 * kg_to_g,
             )
         else:
             default_data[:, 1] = KleinNishina(Z)(default_data[:, 0])
-            xrmac_fm2_per_atom[X[Z]] = XRMAC(default_data)
-            xrmac_cm2_per_g[X[Z]] = XRMAC(
+            xrmac_fm2_per_atom[Z] = XRMAC(default_data)
+            xrmac_cm2_per_g[Z] = XRMAC(
                 default_data,
                 xrmac_conversion=lambda xrmac: xrmac
                 / (
                     cm_to_fm**2
-                    * natural_elements[X[Z]].amu
+                    * natural_elements[Z].amu
                     * physical_constants["atomic mass constant"][0]
                     * kg_to_g
                 ),
             )
-            missing_datasets.append(X[Z])
+            missing_datasets.append(Z)
 
     if len(missing_datasets) > 0:
         warning_message = (
@@ -287,7 +287,7 @@ def load_xrmac_data():
             "cross section:\n".format(xrmac_data_dir)
         )
         for n_element, element in enumerate(missing_datasets):
-            warning_message += element
+            warning_message += X_from_Z[element]
             if n_element < len(missing_datasets) - 1:
                 warning_message += ", "
         warning_message += (
