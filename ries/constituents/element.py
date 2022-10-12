@@ -48,7 +48,6 @@ import numpy as np
 
 from ries.constituents.geant4_densities.densities import densities
 from ries.constituents.ame_2020_mass_data_reader import (
-    Geant4DensityDataReader,
     AME2020MassDataReader
 )
 from ries.constituents.isotope import Isotope
@@ -111,20 +110,20 @@ def create_natural_element_dictionary():
         Path(__file__).parent.absolute() / "ame2020_masses/mass_1.mas20"
     )
     ame_masses = ame2020_mass_data_reader.read_mass_data()
-    X_dict, Z_dict = ame2020_mass_data_reader.read_element_symbols()
+    X_from_Z, Z_from_X = ame2020_mass_data_reader.read_element_symbols()
 
     natural_elements = {}
-    for Z in X_dict:
+    for Z in X_from_Z:
         abundances = {}
         isotopes = {}
-        if X_dict[Z] in isotopic_compositions:
-            for isotope in isotopic_compositions[X_dict[Z]]:
-                isotopes[isotope] = Isotope(
+        if Z in isotopic_compositions:
+            for A in isotopic_compositions[Z]:
+                isotopes[A] = Isotope(
                         Z,
-                        ame_masses[Z][isotope]
+                        ame_masses[Z][A]
                     )
-                abundances[isotope] = isotopic_compositions[X_dict[Z]][isotope]
-            natural_elements[X_dict[Z]] = Element(Z, X_dict[Z], isotopes, abundances, densities[X_dict[Z]])
+                abundances[A] = isotopic_compositions[Z][A]
+            natural_elements[Z] = Element(Z=Z, X=X_from_Z[Z], isotopes=isotopes, abundances=abundances, density=densities[Z])
     return natural_elements
 
 natural_elements = create_natural_element_dictionary()

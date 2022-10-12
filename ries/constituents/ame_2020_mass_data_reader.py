@@ -78,22 +78,22 @@ class AME2020MassDataReader:
         
         Returns
         -------
-        X: dict
+        X_from_Z: dict
             Dictionary with proton numbers (int) as keys and element symbols (str) as values.
-        Z: dict
+        Z_from_X: dict
             Dictionary with element symbols (str) as keys and protons numbers (int) as values.
 
         Examples
         --------
         >>> ame2020_mass_data_reader = AME2020MassDataReader("mass_1.mas20")
-        >>> X, Z = ame2020_mass_data_reader.read_element_symbols()
-        >>> X[6]
+        >>> X_from_Z, Z_from_X = ame2020_mass_data_reader.read_element_symbols()
+        >>> X_from_Z[6]
         "C"
-        >>> Z["Au"]
+        >>> Z_from_X["Au"]
         79
         """
-        X = {}
-        Z = {}
+        X_from_Z = {}
+        Z_from_X = {}
 
         with open(self.ame2020_file) as file:
             for n_line, line in enumerate(file):
@@ -101,9 +101,9 @@ class AME2020MassDataReader:
                     proton_number = int(line[9:14].strip())
                     element_symbol = line[20:22].strip()
 
-                    if proton_number not in X:
-                        X[proton_number] = element_symbol
-                    if element_symbol not in Z:
-                        Z[element_symbol] = proton_number
+                    if proton_number not in X_from_Z:
+                        X_from_Z[proton_number] = element_symbol
+                    if element_symbol not in Z_from_X:
+                        Z_from_X[element_symbol] = proton_number
 
-        return (X, Z)
+        return (X_from_Z, Z_from_X)
