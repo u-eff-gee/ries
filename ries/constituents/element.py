@@ -47,7 +47,7 @@ from pathlib import Path
 import numpy as np
 
 from ries.constituents.geant4_densities.densities import densities
-from ries.constituents.natural_element_data import (
+from ries.constituents.ame_2020_mass_data_reader import (
     Geant4DensityDataReader,
     AME2020MassDataReader
 )
@@ -107,9 +107,6 @@ class Element:
         return np.sum([isotopes[iso].amu * abundances[iso] for iso in isotopes])
 
 def create_natural_element_dictionary():
-    geant4_density_data_reader = Geant4DensityDataReader(
-        Path(__file__).parent.absolute() / "geant4_densities/element_densities.txt"
-    )
     ame2020_mass_data_reader = AME2020MassDataReader(
         Path(__file__).parent.absolute() / "ame2020_masses/mass_1.mas20"
     )

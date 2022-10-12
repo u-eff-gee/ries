@@ -17,7 +17,7 @@ from pathlib import Path
 
 from ries.constituents.element import natural_elements
 from ries.constituents.iupac_isotopic_compositions.isotopic_compositions import isotopic_compositions
-from ries.constituents.natural_element_data import AME2020MassDataReader
+from ries.constituents.ame_2020_mass_data_reader import AME2020MassDataReader
 
 def test_element():
     ame2020_reader = AME2020MassDataReader(
