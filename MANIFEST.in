@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
+include ries/constituents/ame2020_masses/mass_1.mas20
 include ries/constituents/geant4_densities/element_densities.txt
 include ries/constituents/nist_elements/elements.txt
 include ries/nonresonant/nist_xrmac/*.txt
