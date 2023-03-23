@@ -25,9 +25,12 @@ from ries.resonance.voigt import Voigt
 from .boron import B11
 from ries.resonance.debye_model import (
     effective_temperature_debye_approximation,
+    load_room_temperature_T_D_data,
     room_temperature_T_D,
 )
 
+with pytest.warns(UserWarning):
+    load_room_temperature_T_D_data()
 
 class TestResonanceModels:
     @pytest.mark.parametrize(

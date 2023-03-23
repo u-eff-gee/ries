@@ -21,6 +21,7 @@ from scipy.integrate import cumtrapz
 
 from ries.resonance.debye_model import (
     effective_temperature_debye_approximation,
+    load_room_temperature_T_D_data,
     room_temperature_T_D,
 )
 from ries.resonance.voigt import Voigt
@@ -33,7 +34,9 @@ from .boron import B11, natural_boron
 def test_cross_section_plot():
     with pytest.warns(UserWarning):
         load_xrmac_data()
-    cross_section_nonresonant = xrmac_fm2_per_atom["B"]
+    with pytest.warns(UserWarning):
+        load_room_temperature_T_D_data()
+    cross_section_nonresonant = xrmac_fm2_per_atom[5]
     cross_section_resonant = sum(
         [
             Voigt(

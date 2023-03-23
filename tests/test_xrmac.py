@@ -28,7 +28,7 @@ def test_xrmac():
     xrmac_test = (
         xrmac_Pb_1MeV
         * 1e26
-        * natural_elements[Z_from_X["Pb"]].amu
+        * natural_elements[Z_from_X["Pb"]].amu()
         * physical_constants["atomic mass constant"][0]
         * 1e3
     )
