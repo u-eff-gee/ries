@@ -32,6 +32,7 @@ from ries.resonance.debye_model import (
 with pytest.warns(UserWarning):
     load_room_temperature_T_D_data()
 
+
 class TestResonanceModels:
     @pytest.mark.parametrize(
         "Model, parameters, rtol",

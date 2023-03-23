@@ -124,12 +124,4 @@ B11 = Isotope(
     },
 )
 
-natural_boron = Element(
-    Z=5,
-    X="B",
-    isotopes={
-        10: B10,
-        11: B11
-    },
-    density=densities[5]
-)
+natural_boron = Element(Z=5, X="B", isotopes={10: B10, 11: B11}, density=densities[5])

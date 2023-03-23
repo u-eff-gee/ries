@@ -13,17 +13,18 @@
 # You should have received a copy of the GNU General Public License
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
+
 class AME2020MassDataReader:
     """Class to parse the Atomic Mass Evaluation - AME 2020 data
 
     The Atomic Mass Evaluation (AME) :cite:`Huang2021` :cite:`Wang2021` is an evaluated database of
     atomic masses by the International Atomic Energy Agency.
     The committee publishes a structured text file with detailed instructions on how to parse it.
-    Based on the instructions, this class extracts all information from the file that is needed to 
+    Based on the instructions, this class extracts all information from the file that is needed to
     uniquely identify isotopes, plus their nuclear masses in atomic mass units.
 
-    At present and to the knowledge of the author, only the `mass_1.mas20` file from the 2020 
-    evaluation, which is distributed along with the `ries` source code, can be parsed 
+    At present and to the knowledge of the author, only the `mass_1.mas20` file from the 2020
+    evaluation, which is distributed along with the `ries` source code, can be parsed
     (there was a format change compared to the 2016 format).
 
     Attributes
@@ -59,10 +60,13 @@ class AME2020MassDataReader:
         ame2020_masses = {}
         with open(self.ame2020_file) as file:
             for n_line, line in enumerate(file):
-                if n_line > 35: # Skip header.
+                if n_line > 35:  # Skip header.
                     Z = int(line[9:14].strip())
                     A = int(line[14:19].strip())
-                    mass = float(line[106:125].strip().replace(" ", "").replace("#", "."))*1e-6
+                    mass = (
+                        float(line[106:125].strip().replace(" ", "").replace("#", "."))
+                        * 1e-6
+                    )
 
                     if Z not in ame2020_masses:
                         ame2020_masses[Z] = {}
@@ -73,9 +77,9 @@ class AME2020MassDataReader:
     def read_element_symbols(self):
         """Create dictionaries to relate element symbols and proton numbers from the AME2020 file
 
-        The AME2020 file is a conveniently available list of known isotopes, so it should 
+        The AME2020 file is a conveniently available list of known isotopes, so it should
         definitely contain all chemical-element symbols.
-        
+
         Returns
         -------
         X_from_Z: dict
@@ -97,7 +101,7 @@ class AME2020MassDataReader:
 
         with open(self.ame2020_file) as file:
             for n_line, line in enumerate(file):
-                if n_line > 35: # Skip header.
+                if n_line > 35:  # Skip header.
                     proton_number = int(line[9:14].strip())
                     element_symbol = line[20:22].strip()
 

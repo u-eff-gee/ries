@@ -2,6 +2,7 @@ from pathlib import Path
 
 from ries.constituents.ame_2020_mass_data_reader import AME2020MassDataReader
 
+
 class TestAME2020MassDataReader:
     def test_ame2020_mass_data_reader(self):
         ame2020_reader = AME2020MassDataReader(
@@ -28,7 +29,7 @@ class TestAME2020MassDataReader:
             / "../ries/constituents/ame2020_masses/mass_1.mas20"
         )
         X, Z = ame2020_reader.read_element_symbols()
-        
+
         # Test element symbol with a single letter.
         assert X[6] == "C"
         # Test element symbol with two letters.

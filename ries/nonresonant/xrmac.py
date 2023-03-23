@@ -245,6 +245,7 @@ xrmac_data_dir = Path(__file__).parent.absolute() / "../nonresonant/nist_xrmac/"
 xrmac_cm2_per_g = {}
 xrmac_fm2_per_atom = {}
 
+
 def load_xrmac_data():
     cm_to_fm = 1e13
     kg_to_g = 1e3

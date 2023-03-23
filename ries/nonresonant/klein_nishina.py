@@ -314,7 +314,7 @@ class KleinNishina(Nonresonant):
         return (
             np.pi
             * self.scale_factor
-            * x ** -3
+            * x**-3
             * (
                 (2 * x * (2 + x * (1 + x) * (8 + x))) / ((1 + 2 * x) ** 2)
                 + ((x - 2) * x - 2) * np.log(1 + 2 * x)
