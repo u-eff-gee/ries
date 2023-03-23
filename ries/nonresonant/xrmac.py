@@ -261,7 +261,7 @@ def load_xrmac_data():
                 str(xrmac_data_dir / "{:02d}.txt".format(Z)),
                 xrmac_conversion=lambda xrmac: xrmac
                 * cm_to_fm**2
-                * natural_elements[Z].amu
+                * natural_elements[Z].amu()
                 * physical_constants["atomic mass constant"][0]
                 * kg_to_g,
             )
@@ -273,7 +273,7 @@ def load_xrmac_data():
                 xrmac_conversion=lambda xrmac: xrmac
                 / (
                     cm_to_fm**2
-                    * natural_elements[Z].amu
+                    * natural_elements[Z].amu()
                     * physical_constants["atomic mass constant"][0]
                     * kg_to_g
                 ),

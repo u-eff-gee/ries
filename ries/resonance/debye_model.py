@@ -55,9 +55,12 @@ For example, for the Debye temperature of boron, one would type:
     print(room_temperature_T_D['B'])
 """
 
+from warnings import warn
+
 import numpy as np
 from scipy.integrate import quad
 
+from ries.constituents.element import X_from_Z
 
 def effective_temperature_debye_approximation(T, T_D):
     """Debye model for the effective temperature
@@ -90,3 +93,11 @@ def effective_temperature_debye_approximation(T, T_D):
 effective_temperature_debye_approximation = np.vectorize(
     effective_temperature_debye_approximation
 )
+
+room_temperature_T_D = {}
+
+def load_room_temperature_T_D_data():
+    warn("At the moment, all isotopes in the room_temperature_T_D dictionary are "
+         "initialized with an arbitrarily chosen Debye temperature of 500 K.")
+    for Z in range(1,100):
+        room_temperature_T_D[X_from_Z[Z]] = 500.

@@ -27,6 +27,7 @@ from ries.nonresonant.xrmac import load_xrmac_data, xrmac_fm2_per_atom
 from ries.resonance.voigt import Voigt
 from ries.resonance.debye_model import (
     effective_temperature_debye_approximation,
+    load_room_temperature_T_D_data,
     room_temperature_T_D,
 )
 
@@ -50,6 +51,8 @@ class TestCrossSection:
         kg_to_g = 1e3
         with pytest.warns(UserWarning):
             load_xrmac_data()
+        with pytest.warns(UserWarning):
+            load_room_temperature_T_D_data()
         # Create array of all 11B ground-state transitions.
         ground_state_resonances = [
             Voigt(
@@ -126,13 +129,13 @@ class TestCrossSection:
 
         # Test additivity with a derived class for a nonresonant cross section.
         photoabsorption_cross_section = (
-            photoabsorption_cross_section + xrmac_fm2_per_atom["B"]
+            photoabsorption_cross_section + xrmac_fm2_per_atom[5]
         )
 
         photoabsorption_cross_section_value = (
             5.9e-2  # Rounded NIST value
             * cm_to_fm**2
-            * natural_elements["B"].amu
+            * natural_elements[5].amu()
             * physical_constants["atomic mass constant"][0]
             * kg_to_g
         )
@@ -146,8 +149,10 @@ class TestCrossSection:
         )
 
     def test_grid(self):
+        with pytest.warns(UserWarning):
+            load_xrmac_data()
         assert np.allclose(
-            xrmac_fm2_per_atom["B"].equidistant_energy_grid((0.0, 1.0), 3),
+            xrmac_fm2_per_atom[5].equidistant_energy_grid((0.0, 1.0), 3),
             np.array([0.0, 0.5, 1.0]),
             rtol=1e-3,
         )

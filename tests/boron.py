@@ -13,13 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with ries.  If not, see <https://www.gnu.org/licenses/>.
 
+from ries.constituents.geant4_densities.densities import densities
 from ries.constituents.element import Element, natural_elements
 from ries.constituents.isotope import Isotope
 from ries.constituents.state import GroundState, State
 
+
 B10 = Isotope(
-    AX="10B",
-    amu=natural_elements["B"].isotopes["10B"].amu,
+    Z=5,
+    A=10,
+    amu=natural_elements[5].isotopes[10].amu,
     ground_state=GroundState("3^+_1", 6, -1),
     excited_states={
         "1^+_1": State(
@@ -33,8 +36,9 @@ B10 = Isotope(
 )
 
 B11 = Isotope(
-    AX="11B",
-    amu=natural_elements["B"].isotopes["11B"].amu,
+    Z=5,
+    A=11,
+    amu=natural_elements[5].isotopes[11].amu,
     ground_state=GroundState("3/2^-_1", 3, -1),
     excited_states={
         "1/2^-_1": State(
@@ -121,11 +125,11 @@ B11 = Isotope(
 )
 
 natural_boron = Element(
-    5,
-    "B",
-    isotopes={"10B": B10, "11B": B11},
-    abundances={
-        "10B": natural_elements["B"].abundances["10B"],
-        "11B": natural_elements["B"].abundances["11B"],
+    Z=5,
+    X="B",
+    isotopes={
+        10: B10,
+        11: B11
     },
+    density=densities[5]
 )
